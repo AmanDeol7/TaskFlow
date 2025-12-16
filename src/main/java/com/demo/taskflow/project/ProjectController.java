@@ -1,6 +1,9 @@
 package com.demo.taskflow.project;
 
+import com.demo.taskflow.project.dto.ProjectCreateRequest;
+import com.demo.taskflow.project.dto.ProjectResponse;
 import com.demo.taskflow.user.User;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.net.URI;
@@ -16,15 +19,15 @@ public class ProjectController {
     }
 
     @PostMapping
-    public Project create(@PathVariable User userId, @RequestBody Project project){
-        return projectService.create(userId.getId(), project);
+    public ProjectResponse create(@PathVariable User userId, @Valid @RequestBody ProjectCreateRequest req){
+        return projectService.create(userId.getId(), req);
 
 
     }
 
     @GetMapping
-    public List<Project> list(@PathVariable Long userId){
-        return projectService.list(userId);
+    public List<ProjectResponse> list(@PathVariable Long userId){
+        return projectService.listByUser(userId);
     }
 
 

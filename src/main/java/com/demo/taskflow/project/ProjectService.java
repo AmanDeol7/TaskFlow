@@ -1,9 +1,13 @@
 package com.demo.taskflow.project;
 
+import com.demo.taskflow.project.dto.ProjectCreateRequest;
+import com.demo.taskflow.project.dto.ProjectResponse;
 import com.demo.taskflow.user.User;
 import com.demo.taskflow.user.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ProjectService {
@@ -13,16 +17,16 @@ public class ProjectService {
         this.projectRepository = projectRepository;
         this.userRepo = userRepo;
     }
-    public Project create(Long ownerId, Project project){
+    public ProjectResponse create(Long ownerId, ProjectCreateRequest project){
         User owner = userRepo.findById(ownerId).orElseThrow();
-        project.setOwner(owner);
-        return projectRepository.save(project);
+        Project p = Project.builder().name(project.getName()).description(project.getDescription()).owner(owner).build();
+        return ProjectMapper.toResponse(projectRepository.save(p));
     }
-    public List<Project> list(Long ownerId){
+    public List<ProjectResponse> listByUser(Long ownerId){
         if( !userRepo.existsById(ownerId)){
             throw new RuntimeException("User not found");
         }
-        return projectRepository.findByOwnerId(ownerId);
+        return projectRepository.findById(ownerId).stream().map(ProjectMapper::toResponse).toList();
     }
 
 }
