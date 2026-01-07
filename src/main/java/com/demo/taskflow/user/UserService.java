@@ -1,5 +1,6 @@
 package com.demo.taskflow.user;
 
+import com.demo.taskflow.common.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,7 +17,8 @@ public class UserService {
      return userRepository.findAll();
  }
  public User get(Long id){
-     return userRepository.findById(id).orElseThrow();
+
+     return userRepository.findById(id).orElseThrow( ()-> new ResourceNotFoundException("User not found"));
  }
 
 

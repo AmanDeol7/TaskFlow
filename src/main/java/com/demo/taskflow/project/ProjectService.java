@@ -1,5 +1,6 @@
 package com.demo.taskflow.project;
 
+import com.demo.taskflow.common.ResourceNotFoundException;
 import com.demo.taskflow.project.dto.ProjectCreateRequest;
 import com.demo.taskflow.project.dto.ProjectResponse;
 import com.demo.taskflow.user.User;
@@ -18,14 +19,13 @@ public class ProjectService {
         this.userRepo = userRepo;
     }
     public ProjectResponse create(Long ownerId, ProjectCreateRequest project){
-        User owner = userRepo.findById(ownerId).orElseThrow();
+        User owner = userRepo.findById(ownerId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Project p = Project.builder().name(project.getName()).description(project.getDescription()).owner(owner).build();
         return ProjectMapper.toResponse(projectRepository.save(p));
     }
     public List<ProjectResponse> listByUser(Long ownerId){
-        if( !userRepo.existsById(ownerId)){
-            throw new RuntimeException("User not found");
-        }
+
+        User owner = userRepo.findById(ownerId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return projectRepository.findById(ownerId).stream().map(ProjectMapper::toResponse).toList();
     }
 
