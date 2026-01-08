@@ -15,14 +15,17 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "users")
-
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
+    @Column(nullable = false, unique = true)
     private String email;
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private List<Project> projects = new ArrayList<>();
