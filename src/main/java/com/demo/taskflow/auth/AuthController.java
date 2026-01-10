@@ -1,6 +1,7 @@
 package com.demo.taskflow.auth;
 
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,11 @@ public class AuthController {
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest) {
         String token = auth.login(loginRequest);
         return ResponseEntity.ok(token);
+    }
+    @PostMapping("/admin-register")
+    public ResponseEntity<String> adminRegister(@Valid @RequestBody RegisterRequest registerRequest) {
+         auth.adminRegister(registerRequest);
+        return ResponseEntity.ok("Admin registered successfully");
     }
 
 

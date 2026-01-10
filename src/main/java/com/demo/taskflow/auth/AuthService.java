@@ -4,8 +4,10 @@ import com.demo.taskflow.common.ResourceNotFoundException;
 import com.demo.taskflow.user.Role;
 import com.demo.taskflow.user.User;
 import com.demo.taskflow.user.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class AuthService {
@@ -24,6 +26,15 @@ public class AuthService {
         }
 
         User user = User.builder().email(req.getEmail()).username(req.getUsername()).password(passwordEncoder.encode(req.getPassword())).role(Role.USER).build();
+        userRepo.save(user);
+    }
+
+    public void adminRegister(@Valid @RequestBody RegisterRequest req){
+        if( userRepo.existsByEmail(req.getEmail())){
+            throw new RuntimeException("Email already exists");
+        }
+
+        User user = User.builder().email(req.getEmail()).username(req.getUsername()).password(passwordEncoder.encode(req.getPassword())).role(Role.ADMIN).build();
         userRepo.save(user);
     }
 

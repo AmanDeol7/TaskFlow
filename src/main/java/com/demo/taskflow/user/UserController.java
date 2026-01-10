@@ -1,5 +1,7 @@
 package com.demo.taskflow.user;
 
+import com.demo.taskflow.user.dto.UserResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.net.URI;
@@ -14,18 +16,27 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<User>create(@RequestBody User user){
-        User savedUser = userService.create(user);
-        return ResponseEntity.created(URI.create("/api/users/"+savedUser.getId())).body(savedUser);
-    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public List<User> list(){
+    public List<UserResponse> list(){
         return userService.list();
     }
-    @GetMapping("/{id}")
-    public User get(@PathVariable Long id){
-        return userService.get(id);
+
+
+
+    @GetMapping("/me")
+    public UserResponse get(){
+        return userService.getMe();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/{id}")
+    public ResponseEntity<UserResponse> getById(@PathVariable Long id){
+        UserResponse user =  userService.getById(id);
+        return ResponseEntity.ok(user);
+
     }
 
 }
