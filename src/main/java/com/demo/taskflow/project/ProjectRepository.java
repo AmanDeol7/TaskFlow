@@ -8,6 +8,7 @@
     import java.time.LocalDate;
     import java.time.LocalDateTime;
     import java.util.List;
+    import java.util.Optional;
 
 
     public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpecificationExecutor<Project> {
@@ -20,4 +21,6 @@
 //
 //        Page<Project> findByOwnerAndNameContainingIgnoreCase(User owner, String name, Pageable pageable);
 //        Page<Project> findByOwnerAndNameContainingIgnoreCaseAndCreatedAtBetween(User owner, String name, LocalDateTime from , LocalDateTime to,  Pageable pageable);
+        Optional<Project> findByIdAndOwner(Long id, User owner);
+        Optional<Project> findByIdAndOwnerId(Long id, Long ownerId);
     }

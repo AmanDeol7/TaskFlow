@@ -1,6 +1,8 @@
 package com.demo.taskflow.user;
 
+import com.demo.taskflow.user.dto.UserPasswordUpdateRequest;
 import com.demo.taskflow.user.dto.UserResponse;
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -38,5 +40,16 @@ public class UserController {
         return ResponseEntity.ok(user);
 
     }
+
+    @PutMapping("/me/password")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<String> updatePassword( @Valid @RequestBody UserPasswordUpdateRequest req){
+
+        userService.updatePassword(req);
+        return ResponseEntity.ok("Password updated successfully");
+
+    }
+
+
 
 }
